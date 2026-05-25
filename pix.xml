@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<app xmlns="https://sp1rit.arpa/pixiewood/" xmlns:xi="http://www.w3.org/2001/XInclude">
+<app xmlns="https://sp1rit.arpa/pixiewood/">
         <metainfo>
                 <component xmlns="https://specifications.freedesktop.org/metainfo/1.0" type="desktop">
                         <id>de.mfxbe.ExampleApp</id>
@@ -40,6 +40,9 @@
                 </architectures>
                 <configure-options>
                         <option>--cross=cross.txt</option>
+                        <option>-Dgtk:introspection=disabled</option>
+                        <option>-Dglib:introspection=disabled</option>
+                        <option>-Dgdk-pixbuf:introspection=disabled</option>
                 </configure-options>
         </build>
 </app>
