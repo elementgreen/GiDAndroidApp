@@ -13,4 +13,4 @@ dependency('gtk4')
 
 exe = executable('ant', ['app.d'], dependencies: [
  gid_dep        
-], android_exe_type: 'application', install: true, link_args: ['-link-defaultlib-shared=false', '-mtriple=aarch64-linux-android31', '-L=/home/manuel/Android/lib-android_aarch64'])
+], android_exe_type: 'application', install: true, link_args: ['-link-defaultlib-shared=false', '-mtriple=aarch64-linux-android31', '-L=LDC2LIBS/lib-android_aarch64'])
