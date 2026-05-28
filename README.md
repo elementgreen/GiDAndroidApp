@@ -1,14 +1,15 @@
 ## NOTE: This currently does not work
 
-This repo has the current status of my attempts to create a D-Gtk app (using giD) that runs on Android. As of know there are still unresolved issues.
+This repo has the current status of my attempts to create a D-Gtk app (using [giD](https://github.com/Kymorphia/gid) that runs on Android. As of know there are still unresolved issues.
 
 
 ## Prepare
 
-* Look at https://github.com/sp1ritCS/gtk-android-builder for the background.
+* Look at https://github.com/sp1ritCS/gtk-android-builder for the background and install pixiewood.
 * Set up Android Studio and the SDK (Recommended Platform 31) and the NDK (Recommended Version 29).
 * Prepare [LCD2 for Android](https://wiki.dlang.org/Build_D_for_Android)* (also see ldc2.conf.ex)
 * Have Meson installed in a way that allows you to edit parts of it to "patch" Meson (see below).
+* Make sure to use the main branch of giD.
 
 *I highly recommend using https://dlang.org/install.html to install the compiler, as the LCD2 version must fit the downloaded aarch64 library perfectly. The binaries provided in the repositories are not close enough, even if they have the same version number.
 
