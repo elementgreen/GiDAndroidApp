@@ -1,12 +1,6 @@
 [binaries]
 d = 'ldc2'
 
-[host_machine]
-system = 'android'
-cpu_family = 'aarch64'
-cpu = 'aarch64'
-endian = 'little'
-
 [properties]
 d_args = ['-mtriple=aarch64-none-linux-android']
 d_link_args = ['-mtriple=aarch64-none-linux-android']
