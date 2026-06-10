@@ -12,7 +12,7 @@ This repo documents an minimal example how to create a GTK app for Android using
 
 ¹ Instead of the complete Androud studio you can use [command line tools](https://developer.android.com/studio?hl=de#command-line-tools-only) (for downloading sdk and ndk) and [mini-studio](https://github.com/sp1ritCS/mini-studio).
 
-² I highly recommend using https://dlang.org/install.html to install LCD2, as the compiler version must fit the downloaded aarch64 library perfectly. The binaries provided in the Linux distribution repositories are not close enough, even if they have the same version number.
+² I highly recommend using https://dlang.org/install.html to install LCD2 (or build/install manually), as the compiler version must fit the downloaded aarch64 library perfectly. The binaries provided in the Linux distribution repositories are not close enough, even if they have the same version number.
 
 ## Build with
 
