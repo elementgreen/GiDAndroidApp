@@ -1,0 +1,6 @@
+{
+        "name": "gidandroidapp",
+        "dependencies": {
+                "gid:gtk4": ">=0.9.13",
+        }
+}
