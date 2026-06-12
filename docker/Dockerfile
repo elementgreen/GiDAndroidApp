@@ -37,6 +37,9 @@ RUN cd ~ && git clone https://github.com/sp1ritCS/gtk-android-builder.git \
   && cd gtk-android-builder \
   && make install
 
+USER ubuntu
+WORKDIR /home/ubuntu
+
 # Fetch and install Android command line tools
 RUN mkdir -p ~/Android/Sdk/cmdline-tools \
   && cd ~/Android/Sdk/cmdline-tools \
@@ -46,13 +49,13 @@ RUN mkdir -p ~/Android/Sdk/cmdline-tools \
   && mv cmdline-tools latest
 
 # Set Android environment variables
-ENV ANDROID_HOME=/root/Android/Sdk
-ENV ANDROID_NDK_HOME="${ANDROID_HOME}/ndk/27.3.13750724"
+ENV ANDROID_HOME="/home/ubuntu/Android/Sdk"
+ENV ANDROID_NDK_HOME="${ANDROID_HOME}/ndk/29.0.14206865"
 
-# Add the important directories to PATH
+# Add important directories to PATH
 ENV PATH="${PATH}:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/build-tools:${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin"
 
-# Accept Android SDK licenses and install SDK tools and NDX
+# Accept licenses and install SDK components + NDK
 RUN yes | sdkmanager --licenses \
   && sdkmanager --update \
   && sdkmanager \
@@ -62,47 +65,37 @@ RUN yes | sdkmanager --licenses \
     "cmake;3.22.1" \
   && sdkmanager "ndk;29.0.14206865"
 
-# Update .bashrc
-RUN cat >> /root/.bashrc << 'EOF'
-
-# Android SDK
-export ANDROID_HOME=/root/Android/Sdk
-export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.3.13750724
-
-export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
-export PATH="$PATH:$ANDROID_HOME/platform-tools"
-export PATH="$PATH:$ANDROID_HOME/build-tools"
-export PATH="$PATH:$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin"
-EOF
-
 # Install mini-studio
-RUN cd ~/ && git clone https://github.com/sp1ritCS/mini-studio.git
+RUN git clone https://github.com/sp1ritCS/mini-studio.git ~/mini-studio
 
-# Install ldc and dub
+# Install LDC and Dub
 RUN mkdir -p ~/dlang && wget https://dlang.org/install.sh -O ~/dlang/install.sh && chmod 755 ~/dlang/install.sh
 RUN ~/dlang/install.sh ldc
 RUN ~/dlang/install.sh dub
 
-# Install android-aarch64 D runtime/phobos libraries
+# Install Android aarch64 D runtime/Phobos libraries
 RUN cd ~/dlang \
   && wget https://github.com/ldc-developers/ldc/releases/download/v1.42.0/ldc2-1.42.0-android-aarch64.tar.xz \
   && tar xf ldc2-1.42.0-android-aarch64.tar.xz \
-  && mv ldc2-1.42.0-android-aarch64/lib ~/dlang/ldc-1.42.0/lib-android_aarch64
+  && mv ldc2-1.42.0-android-aarch64/lib ~/dlang/ldc-1.42.0/lib-android_aarch64 \
+  && mv ldc2-1.42.0-android-aarch64/lib-android-x86_64 ~/dlang/ldc-1.42.0/lib-android_x86_64 \
+  && rm -rf ~/dlang/ldc2-1.42.0-android-aarch64*
 
-# Add ldc2 activate script to .bashrc
-RUN echo ". ~/dlang/ldc-1.42.0/activate" >> ~/.bashrc
-
-# Create a python virtual environment and install meson
-RUN cd ~/ && python3 -m venv venv \
+# Create Python venv and install Meson 1.11.1
+RUN python3 -m venv ~/venv \
   && . ~/venv/bin/activate \
   && pip install meson==1.11.1
 
-# Add Python venv activation to .bashrc
-RUN echo ". /root/venv/bin/activate" >> ~/.bashrc
-
 # Patch meson
-COPY meson.patch /root
-RUN cd /root && patch -p0 <meson.patch
+COPY meson.patch /home/ubuntu/
+RUN patch -p0 < meson.patch
 
 # Copy android cross-compile ldc2 conf
-COPY ldc2.conf /root/dlang/ldc-1.42.0/etc/ldc2.conf/40-android.conf
+COPY ldc2.conf /home/ubuntu/dlang/ldc-1.42.0/etc/ldc2.conf/40-android.conf
+
+# Update .bashrc to active LDC and Python venv environments
+RUN echo ". ~/dlang/ldc-1.42.0/activate" >>~/.bashrc
+RUN echo ". ~/venv/bin/activate" >>~/.bashrc
+
+# Final working directory for builds
+WORKDIR /build
